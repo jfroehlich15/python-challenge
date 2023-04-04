@@ -54,7 +54,7 @@ with open(pybank_csv) as csvfile:
 
         total_changes += change
 
-        #add months
+        #determine greatest increase/decrease and add months
         if change > greatest_increase:
             greatest_increase = change
             greatest_increase_month = row[0]
