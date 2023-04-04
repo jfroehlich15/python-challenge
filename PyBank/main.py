@@ -72,9 +72,8 @@ with open(pybank_csv) as csvfile:
 
 
 
-    #print analysis
 
-
+#print analysis
 print("Financial Analysis")
 print("")    
 print("----------------------------------")
