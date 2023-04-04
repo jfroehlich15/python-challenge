@@ -46,7 +46,7 @@ with open(pybank_csv) as csvfile:
         #add each value in column 2 to the total volume
         totalvolume += int(row[1])
 
-        #calculate changes in values of colum 2
+        #calculate changes in values of column 2
         current_value = int(row[1])
         change = current_value - previous_value
 
