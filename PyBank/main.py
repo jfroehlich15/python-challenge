@@ -6,13 +6,18 @@ import csv
 pybank_csv = os.path.join("Resources", "budget_data.csv")
 
 print(pybank_csv)
+print("")
 
 
-#lists to store data
 
-all_volumes = []
-changes = []
-months = []
+#set variables to store data in for loop
+
+previous_value = 0
+change = 0
+total_changes = 0
+greatest_increase = 0
+greatest_decrease = 0
+
 
 
 with open(pybank_csv) as csvfile:
@@ -28,10 +33,12 @@ with open(pybank_csv) as csvfile:
     totalvolume = 0
 
 
+
     for row in csvreader:
         
-        #add each month to months list
-        months.append(row[0])
+        #set beginning previous value to first row value
+        if previous_value == 0:
+            previous_value = int(row[1])
 
         #add one to total months for each row
         totalmonths += 1
@@ -39,49 +46,48 @@ with open(pybank_csv) as csvfile:
         #add each value in column 2 to the total volume
         totalvolume += int(row[1])
 
-        #Add volumes to all volumes list to calculate for changes
-        all_volumes.append(int(row[1]))
+        #calculate changes in values of colum 2
+        current_value = int(row[1])
+        change = current_value - previous_value
+
+        previous_value = int(row[1])
+
+        total_changes += change
+
+        #add months
+        if change > greatest_increase:
+            greatest_increase = change
+            greatest_increase_month = row[0]
+
+        if change < greatest_decrease:
+            greatest_decrease = change
+            greatest_decrease_month = row[0]
+
+
+    #calculate average change
+
+    average_change = total_changes / (totalmonths - 1)
 
 
 
-    #loop to track each change in volume
-    for x1, x2 in zip(all_volumes[:-1], all_volumes[1:]):
 
-        #subtract new change from old change and append to changes list
-        change = x2 - x1
-        changes.append(change)
-     
-        #calculate average change
-        average_change = sum(changes) / (totalmonths - 1)
-
-        #find max and min values in changes list
-        increase = max(changes)
-        decrease = min(changes)
-
-        #call month for max
-        month_increase = changes.index(increase)
-        greatest_month = months[month_increase + 1]
-
-        #call month for min
-        month_decrease = changes.index(decrease)
-        worst_month = months[month_decrease + 1]
 
     #print analysis
 
 
-    print("Financial Analysis")
-    print("")
-    print("----------------------------------")
-    print("")
-    print("Total Months: " + str(totalmonths))
-    print("")
-    print("Total: $" + str(totalvolume))
-    print("")
-    print("Average Change: $" + str(round(average_change, 2)))
-    print("")
-    print("Greast Increase in Profits: " + str(greatest_month) + " ($" + str(increase) + ")")
-    print("")
-    print("Greast Decrease in Profits: " + str(worst_month) + " ($" + str(decrease) + ")")
+print("Financial Analysis")
+print("")    
+print("----------------------------------")
+print("")
+print("Total Months: " + str(totalmonths))
+print("")
+print("Total: $" + str(totalvolume))
+print("")
+print("Average Change: $" + str(round(average_change, 2)))
+print("")
+print("Greast Increase in Profits: " + str(greatest_increase_month) + " ($" + str(greatest_increase) + ")")
+print("")
+print("Greast Decrease in Profits: " + str(greatest_decrease_month) + " ($" + str(greatest_decrease) + ")")
 
 #create output file path
 output_file = os.path.join("Analysis", "PyBank_final.csv")
@@ -94,8 +100,8 @@ with open(output_file, "w", encoding='utf-8') as datafile:
     writer.writerow(["Total Months: " + str(totalmonths)])
     writer.writerow(["Total: $" + str(totalvolume)])
     writer.writerow(["Average Change: $" + str(round(average_change, 2))])
-    writer.writerow(["Greast Increase in Profits: " + str(greatest_month) + " ($" + str(increase) + ")"])
-    writer.writerow(["Greast Decrease in Profits: " + str(worst_month) + " ($" + str(decrease) + ")"])
+    writer.writerow(["Greast Increase in Profits: " + str(greatest_increase_month) + " ($" + str(greatest_increase) + ")"])
+    writer.writerow(["Greast Decrease in Profits: " + str(greatest_decrease_month) + " ($" + str(greatest_decrease) + ")"])
 
 
   
